@@ -1,0 +1,134 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Users {
+  id                    Int @id @default(autoincrement())
+  username              String @unique
+  name                  String 
+  email                 String @unique
+  password_hash         String
+  profile_picture_url   String
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  store Stores[]
+  passReset PasswordReset[]
+  storeRating StoreRatings[]
+  productRating ProductRatings[]
+  ratingComment RatingComments[]
+}
+
+model Categories {
+  id                   Int @id @default(autoincrement())
+  name                 String 
+  parent_category_id   Int?
+  parent_category      Categories? @relation("CategoryHierarchy", fields:[parent_category_id], references: [id], onDelete: Cascade)
+
+  product Products[]
+  category Categories[] @relation("CategoryHierarchy")
+}
+
+model Stores {
+  id                    Int @id @default(autoincrement())
+  user_id               Int
+  user                  Users @relation(fields: [user_id], references: [id])
+  category_id           Int
+  name                  String 
+  description           String 
+  logo_url              String
+  banner_url            String
+  sticker_url           String
+  created_url           String
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  product Products[]
+  storeRating StoreRatings[]
+}
+
+model PasswordReset {
+  id                    Int @id @default(autoincrement())
+  userId                Int
+  user                  Users @relation(fields: [userId], references: [id])
+  code                  String 
+  expiresAt             DateTime
+  used                  Boolean
+  createdAt             DateTime @default(now())
+}
+
+model StoreRatings {
+  id                    Int @id @default(autoincrement())
+  user_id               Int
+  user                  Users @relation(fields: [user_id], references: [id])
+  store_id              Int
+  store                 Stores @relation(fields: [store_id], references: [id])
+  rating                Int
+  comment               String
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  ratingComment RatingComments[]
+}
+
+model Products {
+  id                    Int @id @default(autoincrement())
+  store_id              Int
+  store                 Stores @relation(fields: [store_id], references: [id])
+  category_id           Int
+  category              Categories @relation(fields: [category_id], references: [id])
+  name                  String 
+  description           String
+  price                 Decimal
+  stock                 Int
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  productRating ProductRatings[]
+  productImage ProductImages[]
+}
+
+model ProductRatings {
+  id                   Int @id @default(autoincrement())
+  user_id              Int 
+  user                 Users @relation(fields: [user_id], references: [id])
+  product_id           Int
+  product              Products @relation(fields: [product_id], references: [id])
+  rating               Int
+  comment              String 
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  ratingComment RatingComments[]
+}
+
+model ProductImages {
+  id                  Int @id @default(autoincrement())
+  product_id          Int
+  product             Products @relation(fields: [product_id], references: [id])
+  image_url           String
+  order               Int
+}
+
+model RatingComments {
+  id                  Int @id @default(autoincrement())
+  user_id             Int
+  user                Users @relation(fields: [user_id], references: [id])
+  store_rating_id     Int
+  store_rating        StoreRatings @relation(fields: [store_rating_id], references: [id])
+  product_rating_id   Int
+  product_rating      ProductRatings @relation(fields: [product_rating_id], references: [id])
+  content             String 
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}
