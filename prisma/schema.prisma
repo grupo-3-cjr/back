@@ -9,16 +9,16 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
 }
 
 model Users {
   id                    Int @id @default(autoincrement())
-  username              String @db.VarChar(50) @unique
-  name                  String @db.VarChar(100)
+  username              String @unique
+  name                  String 
   email                 String @unique
   password_hash         String
-  profile_picture_url   String @db.VarChar(200)
+  profile_picture_url   String
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
 
@@ -31,7 +31,7 @@ model Users {
 
 model Categories {
   id                   Int @id @default(autoincrement())
-  name                 String @db.VarChar
+  name                 String 
   parent_category_id   Int?
   parent_category      Categories? @relation("CategoryHierarchy", fields:[parent_category_id], references: [id], onDelete: Cascade)
 
@@ -44,12 +44,12 @@ model Stores {
   user_id               Int
   user                  Users @relation(fields: [user_id], references: [id])
   category_id           Int
-  name                  String @db.VarChar(100)
-  description           String @db.VarChar(100)
-  logo_url              String @db.VarChar(200)
-  banner_url            String @db.VarChar(200)
-  sticker_url           String @db.VarChar(200)
-  created_url           String @db.VarChar(200)
+  name                  String 
+  description           String 
+  logo_url              String
+  banner_url            String
+  sticker_url           String
+  created_url           String
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
 
@@ -61,7 +61,7 @@ model PasswordReset {
   id                    Int @id @default(autoincrement())
   userId                Int
   user                  Users @relation(fields: [userId], references: [id])
-  code                  String @db.VarChar(100)
+  code                  String 
   expiresAt             DateTime
   used                  Boolean
   createdAt             DateTime @default(now())
@@ -74,7 +74,7 @@ model StoreRatings {
   store_id              Int
   store                 Stores @relation(fields: [store_id], references: [id])
   rating                Int
-  comment               String @db.VarChar(500)
+  comment               String
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
 
@@ -87,9 +87,9 @@ model Products {
   store                 Stores @relation(fields: [store_id], references: [id])
   category_id           Int
   category              Categories @relation(fields: [category_id], references: [id])
-  name                  String @db.VarChar(100)
-  description           String @db.VarChar(500)
-  price                 Decimal @db.Decimal(8,2)
+  name                  String 
+  description           String
+  price                 Decimal
   stock                 Int
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
@@ -105,7 +105,7 @@ model ProductRatings {
   product_id           Int
   product              Products @relation(fields: [product_id], references: [id])
   rating               Int
-  comment              String @db.VarChar(100)
+  comment              String 
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
 
@@ -116,7 +116,7 @@ model ProductImages {
   id                  Int @id @default(autoincrement())
   product_id          Int
   product             Products @relation(fields: [product_id], references: [id])
-  image_url           String @db.VarChar(200)
+  image_url           String
   order               Int
 }
 
@@ -128,7 +128,7 @@ model RatingComments {
   store_rating        StoreRatings @relation(fields: [store_rating_id], references: [id])
   product_rating_id   Int
   product_rating      ProductRatings @relation(fields: [product_rating_id], references: [id])
-  content             String @db.VarChar(100)
+  content             String 
   createdAt           DateTime @default(now())
   updatedAt           DateTime @updatedAt
 }
