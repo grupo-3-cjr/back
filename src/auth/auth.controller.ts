@@ -13,6 +13,6 @@ export class AuthController {
     login(@Request() req) {
         console.log(req.user);
 
-        return 'Realizar login';
+        return this.authService.login(req.user);
     }
 }
