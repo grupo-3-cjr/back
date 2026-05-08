@@ -1,6 +1,6 @@
-import { User } from '../entities/user.entity';
 import {
   IsEmail,
+  IsOptional,
   IsString,
   Matches,
   MaxLength,
@@ -22,6 +22,11 @@ export class CreateUserDto {
   @IsString()
   name!: string;
 
-  username!: string;
-  profile_picture_url!: string;
+  @IsOptional()
+  @IsString()
+  username?: string;
+
+  @IsOptional()
+  @IsString()
+  profile_picture_url?: string;
 }

@@ -11,11 +11,11 @@ export class UserService {
   async create(createUserDto: CreateUserDto) {
   const createdUser = await this.prisma.users.create({
     data: {
-      username: createUserDto.username,
+      username: createUserDto.username ?? '',
       name: createUserDto.name,
       email: createUserDto.email,
       password_hash: await bcrypt.hash(createUserDto.password, 10),
-      profile_picture_url: createUserDto.profile_picture_url,
+      profile_picture_url: createUserDto.profile_picture_url ?? '',
     },
   });
 
