@@ -1,4 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { 
+  Injectable, 
+  ConflictException, 
+  NotFoundException, 
+  InternalServerErrorException 
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -9,39 +14,104 @@ export class UserService {
   constructor(private prisma: PrismaService){}
 
   async create(createUserDto: CreateUserDto) {
-  const createdUser = await this.prisma.users.create({
-    data: {
-      username: createUserDto.username ?? '',
-      name: createUserDto.name,
-      email: createUserDto.email,
-      password_hash: await bcrypt.hash(createUserDto.password, 10),
-      profile_picture_url: createUserDto.profile_picture_url ?? '',
-    },
+    const createdUser = await this.prisma.users.create({
+      data: {
+        username: createUserDto.username ?? '',
+        name: createUserDto.name,
+        email: createUserDto.email,
+        password_hash: await bcrypt.hash(createUserDto.password, 10),
+        profile_picture_url: createUserDto.profile_picture_url ?? '',
+      },
   });
 
   return createdUser;
 }
 
-  findByEmail(email: string) {
+async findByEmail(email: string) {
     return this.prisma.users.findUnique({
-      where: {email},
+      where: { email },
     });
   }
 
-
-  findAll() {
-    return `This action returns all user`;
+async findAll() {
+    return this.prisma.users.findMany({
+      select: {
+        id: true,
+        username: true,
+        name: true,
+        email: true,
+        profile_picture_url: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+async findOne(id: number) {
+    const user = await this.prisma.users.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        username: true,
+        name: true,
+        email: true,
+        profile_picture_url: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException(`Usuário com ID #${id} não encontrado.`);
+    }
+    return user;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+async update(id: number, updateUserDto: UpdateUserDto) {
+  
+    const dataToUpdate: any = { ...updateUserDto };
+
+ 
+    if (updateUserDto.password) {
+      dataToUpdate.password_hash = await bcrypt.hash(updateUserDto.password, 10);
+      delete dataToUpdate.password; 
+    }
+
+    try {
+      const updatedUser = await this.prisma.users.update({
+        where: { id },
+        data: dataToUpdate,
+      });
+
+      const { password_hash, ...userWithoutPassword } = updatedUser;
+      return userWithoutPassword;
+
+    } catch (error: any) {
+      if (error.code === 'P2025') {
+        throw new NotFoundException(`Usuário com ID #${id} não encontrado.`);
+      }
+      if (error.code === 'P2002') {
+        throw new ConflictException('Username ou Email já estão em uso.');
+      }
+      throw error;
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+async remove(id: number) {
+    try {
+      const deletedUser = await this.prisma.users.delete({
+        where: { id },
+      });
+      
+
+      const { password_hash, ...userWithoutPassword } = deletedUser;
+      return userWithoutPassword;
+
+    } catch (error: any) {
+      if (error.code === 'P2025') {
+        throw new NotFoundException(`Usuário com ID #${id} não encontrado.`);
+      }
+      throw error;
+    }
   }
-}
+} 
