@@ -8,10 +8,13 @@ import { JwtModule } from '@nestjs/jwt';
 import { LoginValidationMiddleware } from './middlewares/login-validation.middleware';
 
 @Module({
-  imports: [UserModule, JwtModule.register({
-    secret: process.env.JWT_SECRET,
-    signOptions: { expiresIn: '30d' },
-  })],
+  imports: [
+    UserModule,
+    JwtModule.register({
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: '30d' },
+    }),
+  ],
   controllers: [AuthController],
   providers: [AuthService, LocalStrategy, JwtStrategy],
 })

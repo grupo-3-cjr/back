@@ -1,8 +1,8 @@
-import { 
-  Injectable, 
-  ConflictException, 
-  NotFoundException, 
-  InternalServerErrorException 
+import {
+  Injectable,
+  ConflictException,
+  NotFoundException,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -11,7 +11,7 @@ import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService){}
+  constructor(private prisma: PrismaService) {}
 
   async create(createUserDto: CreateUserDto) {
     const createdUser = await this.prisma.users.create({
@@ -22,18 +22,18 @@ export class UserService {
         password_hash: await bcrypt.hash(createUserDto.password, 10),
         profile_picture_url: createUserDto.profile_picture_url ?? '',
       },
-  });
+    });
 
-  return createdUser;
-}
+    return createdUser;
+  }
 
-async findByEmail(email: string) {
+  async findByEmail(email: string) {
     return this.prisma.users.findUnique({
       where: { email },
     });
   }
 
-async findAll() {
+  async findAll() {
     return this.prisma.users.findMany({
       select: {
         id: true,
@@ -47,7 +47,7 @@ async findAll() {
     });
   }
 
-async findOne(id: number) {
+  async findOne(id: number) {
     const user = await this.prisma.users.findUnique({
       where: { id },
       select: {
@@ -67,14 +67,15 @@ async findOne(id: number) {
     return user;
   }
 
-async update(id: number, updateUserDto: UpdateUserDto) {
-  
+  async update(id: number, updateUserDto: UpdateUserDto) {
     const dataToUpdate: any = { ...updateUserDto };
 
- 
     if (updateUserDto.password) {
-      dataToUpdate.password_hash = await bcrypt.hash(updateUserDto.password, 10);
-      delete dataToUpdate.password; 
+      dataToUpdate.password_hash = await bcrypt.hash(
+        updateUserDto.password,
+        10,
+      );
+      delete dataToUpdate.password;
     }
 
     try {
@@ -85,7 +86,6 @@ async update(id: number, updateUserDto: UpdateUserDto) {
 
       const { password_hash, ...userWithoutPassword } = updatedUser;
       return userWithoutPassword;
-
     } catch (error: any) {
       if (error.code === 'P2025') {
         throw new NotFoundException(`Usuário com ID #${id} não encontrado.`);
@@ -97,16 +97,14 @@ async update(id: number, updateUserDto: UpdateUserDto) {
     }
   }
 
-async remove(id: number) {
+  async remove(id: number) {
     try {
       const deletedUser = await this.prisma.users.delete({
         where: { id },
       });
-      
 
       const { password_hash, ...userWithoutPassword } = deletedUser;
       return userWithoutPassword;
-
     } catch (error: any) {
       if (error.code === 'P2025') {
         throw new NotFoundException(`Usuário com ID #${id} não encontrado.`);
@@ -114,4 +112,4 @@ async remove(id: number) {
       throw error;
     }
   }
-} 
+}
