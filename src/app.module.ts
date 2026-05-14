@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { APP_GUARD } from '@nestjs/core';
 import { StoreModule } from './store/store.module';
+import { CategoryModule } from './category/category.module';
 import { ConfigModule } from '@nestjs/config';
 
 @Module({
@@ -19,6 +20,7 @@ import { ConfigModule } from '@nestjs/config';
     AuthModule,
     StoreModule,
   ],
+    CategoryModule],
   controllers: [AppController],
   providers: [
     AppService,
