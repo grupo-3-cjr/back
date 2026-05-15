@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { CreateProdutoDto } from './dto/create-produto.dto';
-import { UpdateProdutoDto } from './dto/update-produto.dto';
+import { CreateProductDto } from './dto/create-product.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
-export class ProdutosService {
+export class ProductService {
   constructor(private readonly prisma: PrismaService){}
 
-  create(createProdutoDto: CreateProdutoDto) {
+  create(createProductDto: CreateProductDto) {
     return 'This action adds a new produto';
   }
 
@@ -19,7 +19,7 @@ export class ProdutosService {
     return `This action returns a #${id} produto`;
   }
 
-  update(id: number, updateProdutoDto: UpdateProdutoDto) {
+  update(id: number, updateProductDto: UpdateProductDto) {
     return `This action updates a #${id} produto`;
   }
 

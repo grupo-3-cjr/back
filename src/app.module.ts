@@ -6,7 +6,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { APP_GUARD } from '@nestjs/core';
-import { ProdutosModule } from './produtos/produtos.module';
+import { ProdutosModule } from './products/product.module';
 
 @Module({
   imports: [UserModule, PrismaModule, AuthModule, ProdutosModule],
