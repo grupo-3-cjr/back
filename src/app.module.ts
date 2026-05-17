@@ -1,26 +1,36 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { UserModule } from './user/user.module';
+import { APP_GUARD } from '@nestjs/core';
+import { ConfigModule } from '@nestjs/config';
+
+// ISegurança
 import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
-import { APP_GUARD } from '@nestjs/core';
+
+// Módulos de Funcionalidades
+import { UserModule } from './user/user.module';
 import { StoreModule } from './store/store.module';
 import { CategoryModule } from './category/category.module';
-import { ConfigModule } from '@nestjs/config';
+
+// Componentes Base do App
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    UserModule,
+    
+    // Banco de Dados
     PrismaModule,
+    // Autenticação
     AuthModule,
+    // Entidades do Sistema
+    UserModule,
     StoreModule,
+    CategoryModule,
   ],
-    CategoryModule],
   controllers: [AppController],
   providers: [
     AppService,
