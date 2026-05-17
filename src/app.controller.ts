@@ -15,7 +15,7 @@ export class AppController {
   }
 
   @Get('me')
-  getMe(@CurrentUser() user: User){
+  getMe(@CurrentUser() user: User) {
     return user;
   }
 }
