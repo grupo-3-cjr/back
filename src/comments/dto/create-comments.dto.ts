@@ -1,7 +1,8 @@
-import { IsInt, IsString } from 'class-validator';
+import { IsInt, IsString, IsNotEmpty} from 'class-validator';
 
 export class CreateCommentsDto {
     @IsInt()
+    @IsNotEmpty()
     user_id!:  number;
 
     @IsInt()
@@ -11,5 +12,6 @@ export class CreateCommentsDto {
     product_rating_id!:  number;
     
     @IsString()
+    @IsNotEmpty()
     content!:  string;
 }
