@@ -74,7 +74,7 @@ export class ProductService {
     });
   }catch(error: any){
     if(error.code==='P2025'){
-      throw new NotFoundException('Produto com ID#${id} não encontrado.');
+      throw new NotFoundException(`Produto com ID#${id} não encontrado.`);
       }
       throw error;
     } 
