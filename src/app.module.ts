@@ -9,6 +9,9 @@ import { APP_GUARD } from '@nestjs/core';
 import { StoreModule } from './store/store.module';
 import { CategoryModule } from './category/category.module';
 import { ConfigModule } from '@nestjs/config';
+import { CommentsService } from './comments/comments.service';
+import { CommentsController } from './comments/comments.controller';
+import { CommentsModule } from './comments/comments.module';
 
 @Module({
   imports: [
@@ -19,15 +22,17 @@ import { ConfigModule } from '@nestjs/config';
     PrismaModule,
     AuthModule,
     StoreModule,
+    CommentsModule,
   ],
     CategoryModule],
-  controllers: [AppController],
+  controllers: [AppController, CommentsController],
   providers: [
     AppService,
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
     },
+    CommentsService,
   ],
 })
 export class AppModule {}
