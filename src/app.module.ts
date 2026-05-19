@@ -15,6 +15,10 @@ import { CategoryModule } from './category/category.module';
 // Componentes Base do App
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { ConfigModule } from '@nestjs/config';
+import { CommentsService } from './comments/comments.service';
+import { CommentsController } from './comments/comments.controller';
+import { CommentsModule } from './comments/comments.module';
 
 @Module({
   imports: [
@@ -32,12 +36,17 @@ import { AppService } from './app.service';
     CategoryModule,
   ],
   controllers: [AppController],
+    CommentsModule,
+  ],
+    CategoryModule],
+  controllers: [AppController, CommentsController],
   providers: [
     AppService,
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
     },
+    CommentsService,
   ],
 })
 export class AppModule {}
