@@ -4,9 +4,11 @@ import {
     IsNumber,
     Min, 
 }   from "class-validator";
+import { IsPublic } from "src/auth/decorators/is-public.decorator";
 
 
 export class CreateProductDto {
+
 
     @IsNumber()
     store_id!: number;

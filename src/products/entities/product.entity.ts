@@ -10,3 +10,4 @@ export class Product {
     updatedAt!: Date;
 
 }
+
