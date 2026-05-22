@@ -17,6 +17,7 @@ import { ProductModule } from './products/product.module';
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
     },
+    CommentsService,
   ],
 })
 export class AppModule {}
