@@ -11,14 +11,12 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { UserModule } from './user/user.module';
 import { StoreModule } from './store/store.module';
 import { CategoryModule } from './category/category.module';
+import { ProductModule } from './products/product.module';
+
 
 // Componentes Base do App
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ConfigModule } from '@nestjs/config';
-import { CommentsService } from './comments/comments.service';
-import { CommentsController } from './comments/comments.controller';
-import { CommentsModule } from './comments/comments.module';
 
 @Module({
   imports: [
@@ -34,19 +32,16 @@ import { CommentsModule } from './comments/comments.module';
     UserModule,
     StoreModule,
     CategoryModule,
+    ProductModule
   ],
   controllers: [AppController],
-    CommentsModule,
-  ],
-    CategoryModule],
-  controllers: [AppController, CommentsController],
   providers: [
     AppService,
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
     },
-    CommentsService,
+    
   ],
 })
 export class AppModule {}
