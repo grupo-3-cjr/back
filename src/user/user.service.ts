@@ -2,29 +2,63 @@ import {
   Injectable,
   ConflictException,
   NotFoundException,
-  InternalServerErrorException,
+  InternalServerErrorException, 
+  Logger
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class UserService {
   constructor(private prisma: PrismaService) {}
+  private readonly logger = new Logger(UserService.name);
 
-  async create(createUserDto: CreateUserDto) {
-    const createdUser = await this.prisma.users.create({
-      data: {
-        username: createUserDto.username ?? '',
-        name: createUserDto.name,
-        email: createUserDto.email,
-        password_hash: await bcrypt.hash(createUserDto.password, 10),
-        profile_picture_url: createUserDto.profile_picture_url ?? '',
-      },
-    });
+async create(createUserDto: CreateUserDto) {
+    try {
+      const hashedPassword = await bcrypt.hash(createUserDto.password, 10); //criptografando a senha
 
-    return createdUser;
+      const createdUser = await this.prisma.users.create({
+        data: {
+          username: createUserDto.username ?? '',
+          name: createUserDto.name,
+          email: createUserDto.email,
+          password_hash: hashedPassword,
+          profile_picture_url: createUserDto.profile_picture_url ?? '',
+        },
+      });
+
+      // Remove o password_hash do retorno
+      const { password_hash, ...userSemPassword } = createdUser;
+      
+      return userSemPassword;
+
+    } catch (error: any) {
+      // Grava o erro dos logs do servidor
+      this.logger.error(`Falha ao criar usuário: ${error.message}`, error.stack);
+
+      // Captura erros conhecidos do Prisma
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        
+        // P2002:  E-mail ou Username já cadastrados
+        if (error.code === 'P2002') {
+          // Opcional: Descobrir qual campo falhou: email ou username
+          const targets = (error.meta?.target as string[]) || [];
+          const conflitedField = targets.includes('email') ? 'E-mail' : 'Username';
+          
+          throw new ConflictException(
+            `Este ${conflitedField} já está sendo utilizado por outra conta.`
+          );
+        }
+      }
+
+      // Erro genérico de segurança
+      throw new InternalServerErrorException(
+        'Ocorreu um erro interno ao processar o seu cadastro. Tente novamente mais tarde.'
+      );
+    }
   }
 
   async findByEmail(email: string) {
