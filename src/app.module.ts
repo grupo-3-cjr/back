@@ -11,6 +11,12 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { UserModule } from './user/user.module';
 import { StoreModule } from './store/store.module';
 import { CategoryModule } from './category/category.module';
+import { ConfigModule } from '@nestjs/config';
+import { CommentsService } from './comments/comments.service';
+import { CommentsController } from './comments/comments.controller';
+import { CommentsModule } from './comments/comments.module';
+import { StoreRatingsModule } from './store-ratings/store-ratings.module';
+import { ProductRatingsModule } from './product-ratings/product-ratings.module';
 import { ProductModule } from './products/product.module';
 
 
@@ -31,6 +37,12 @@ import { AppService } from './app.service';
     // Entidades do Sistema
     UserModule,
     StoreModule,
+    CommentsModule,
+    StoreRatingsModule,
+    ProductRatingsModule,
+    CategoryModule,
+  ],
+  controllers: [AppController, CommentsController],
     CategoryModule,
     ProductModule
   ],
