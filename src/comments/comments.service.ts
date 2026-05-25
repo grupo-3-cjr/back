@@ -7,7 +7,7 @@ Injectable,
   NotFoundException
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Prisma } from '@prisma/client';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { CreateCommentsDto } from './dto/create-comments.dto';
 import { UpdateCommentsDto } from './dto/update-comments.dto';
 
@@ -32,7 +32,7 @@ export class CommentsService {
         } catch (error: any) {
             this.logger.error(`Falha ao criar comentário: ${error.message}`, error.stack);
 
-            if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            if (error instanceof PrismaClientKnownRequestError) {
                 if (error.code === 'P2003') {
                     throw new BadRequestException('Não foi possível criar o comentário. Verifique se o usuário ou a avaliação informada existem.');
                 }
