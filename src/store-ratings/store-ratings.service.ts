@@ -1,26 +1,84 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateStoreRatingDto } from './dto/create-store-rating.dto';
 import { UpdateStoreRatingDto } from './dto/update-store-rating.dto';
 
 @Injectable()
 export class StoreRatingsService {
-  create(createStoreRatingDto: CreateStoreRatingDto) {
-    return 'This action adds a new storeRating';
+  constructor(private prisma: PrismaService) {}
+
+  async create(createStoreRatingDto: CreateStoreRatingDto) {
+    const createdStoreRating = await this.prisma.storeRatings.create({
+      data: {
+        user_id: createStoreRatingDto.user_id,
+        store_id: createStoreRatingDto.store_id,
+        rating: createStoreRatingDto.rating,
+        comment: createStoreRatingDto.comment,
+      },
+    });
+
+    return createdStoreRating;
   }
 
-  findAll() {
-    return `This action returns all storeRatings`;
+  async findAll() {
+    return this.prisma.storeRatings.findMany({
+      select: {
+        id: true,
+        user_id: true,
+        store_id: true,
+        rating: true,
+        comment: true,
+      },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} storeRating`;
+  async findOne(id: number) {
+    const storeRating = await this.prisma.storeRatings.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        user_id: true,
+        store_id: true,
+        rating: true,
+        comment: true,
+      },
+    });
+
+    if (!storeRating) {
+      throw new NotFoundException(`Avaliação de loja com ID ${id} não encontrado.`);
+    }
+
+    return storeRating;
   }
 
-  update(id: number, updateStoreRatingDto: UpdateStoreRatingDto) {
-    return `This action updates a #${id} storeRating`;
+  async update(id: number, updateStoreRatingDto: UpdateStoreRatingDto) {
+    try {
+      const updatedStoreRatingDto = await this.prisma.storeRatings.update({
+        where: { id },
+        data: updateStoreRatingDto,
+      });
+
+      return updatedStoreRatingDto;
+    } catch (error:any) {
+      if (error.code === 'P2025') {
+        throw new NotFoundException(`Avaliação de loja com ID ${id} não encontado.`);
+      }
+
+      throw error;
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} storeRating`;
+  async remove(id: number) {
+    try {
+      return await this.prisma.storeRatings.delete({
+        where: { id },
+      });
+    } catch (error:any) {
+      if (error.code === 'P2025') {
+        throw new NotFoundException(`Avaliação de loja com ID ${id} não encontrado.`);
+      }
+
+      throw error;
+    }
   }
 }

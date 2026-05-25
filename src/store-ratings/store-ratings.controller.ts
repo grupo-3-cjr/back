@@ -2,7 +2,9 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { StoreRatingsService } from './store-ratings.service';
 import { CreateStoreRatingDto } from './dto/create-store-rating.dto';
 import { UpdateStoreRatingDto } from './dto/update-store-rating.dto';
+import { IsPublic } from 'src/auth/decorators/is-public.decorator';
 
+@IsPublic()
 @Controller('store-ratings')
 export class StoreRatingsController {
   constructor(private readonly storeRatingsService: StoreRatingsService) {}
