@@ -12,6 +12,7 @@ import { ConfigModule } from '@nestjs/config';
 import { CommentsService } from './comments/comments.service';
 import { CommentsController } from './comments/comments.controller';
 import { CommentsModule } from './comments/comments.module';
+import { ProductImagesModule } from './product-images/product-images.module';
 
 @Module({
   imports: [
@@ -23,8 +24,9 @@ import { CommentsModule } from './comments/comments.module';
     AuthModule,
     StoreModule,
     CommentsModule,
+    ProductImagesModule,
+    CategoryModule
   ],
-    CategoryModule],
   controllers: [AppController, CommentsController],
   providers: [
     AppService,
