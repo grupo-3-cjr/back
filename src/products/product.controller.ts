@@ -4,6 +4,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { IsPublic } from 'src/auth/decorators/is-public.decorator';
 
+@IsPublic()
 @Controller('produtos')
 export class ProductController {
   
