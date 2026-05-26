@@ -15,6 +15,7 @@ import { ConfigModule } from '@nestjs/config';
 import { CommentsService } from './comments/comments.service';
 import { CommentsController } from './comments/comments.controller';
 import { CommentsModule } from './comments/comments.module';
+import { ProductImagesModule } from './product-images/product-images.module';
 import { StoreRatingsModule } from './store-ratings/store-ratings.module';
 import { ProductRatingsModule } from './product-ratings/product-ratings.module';
 import { ProductModule } from './products/product.module';
@@ -38,6 +39,8 @@ import { AppService } from './app.service';
     UserModule,
     StoreModule,
     CommentsModule,
+    ProductImagesModule,
+    CategoryModule
     StoreRatingsModule,
     ProductRatingsModule,
     CategoryModule,
