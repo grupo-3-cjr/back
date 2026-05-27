@@ -29,10 +29,9 @@ import { AppService } from './app.service';
     StoreModule,
     CommentsModule,
     ProductImagesModule,
-    CategoryModule
+    CategoryModule,
     StoreRatingsModule,
     ProductRatingsModule,
-    CategoryModule,
     ProductModule,
   ],
   controllers: [AppController],
