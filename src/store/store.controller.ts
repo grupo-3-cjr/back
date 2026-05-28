@@ -13,7 +13,6 @@ import { UpdateStoreDto } from './dto/update-store.dto';
 import { IsPublic } from 'src/auth/decorators/is-public.decorator';
 
 @IsPublic()
-
 @Controller('store')
 export class StoreController {
   constructor(private readonly storeService: StoreService) {}
