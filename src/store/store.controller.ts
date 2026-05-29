@@ -1,12 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { StoreService } from './store.service';
 import { CreateStoreDto } from './dto/create-store.dto';
 import { UpdateStoreDto } from './dto/update-store.dto';
@@ -15,6 +7,7 @@ import { IsPublic } from 'src/auth/decorators/is-public.decorator';
 @IsPublic()
 @Controller('store')
 export class StoreController {
+
   constructor(private readonly storeService: StoreService) {}
 
   @Post()
@@ -23,8 +16,8 @@ export class StoreController {
   }
 
   @Get()
-  findAll() {
-    return this.storeService.findAll();
+  findAll(@Query('search') search?: string) {
+    return this.storeService.findAll(search);
   }
 
   @Get(':id')

@@ -9,8 +9,6 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 import { UserModule } from './user/user.module';
 import { StoreModule } from './store/store.module';
 import { CategoryModule } from './category/category.module';
-import { CommentsService } from './comments/comments.service';
-import { CommentsController } from './comments/comments.controller';
 import { CommentsModule } from './comments/comments.module';
 import { ProductImagesModule } from './product-images/product-images.module';
 import { StoreRatingsModule } from './store-ratings/store-ratings.module';
@@ -34,7 +32,7 @@ import { AppService } from './app.service';
     CategoryModule,
     StoreRatingsModule,
     ProductRatingsModule,
-    ProductModule,
+    ProductModule
   ],
   controllers: [AppController],
   providers: [

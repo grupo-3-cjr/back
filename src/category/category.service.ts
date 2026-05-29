@@ -22,8 +22,15 @@ export class CategoryService {
     return createdCategory;
   }
 
-  async findAll() {
+  async findAll(search?: string) {
     return this.prisma.categories.findMany({
+      where: search
+        ? {
+          name: {
+            contains: search,
+          },
+        }
+        : undefined,
       select: {
         id: true,
         name: true,

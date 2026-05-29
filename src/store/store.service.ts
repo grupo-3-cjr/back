@@ -28,8 +28,15 @@ export class StoreService {
     return createdStore;
   }
 
-  async findAll() {
+  async findAll(search?: string) {
     return this.prisma.stores.findMany({
+      where: search
+        ? {
+          name: {
+            contains: search,
+          },
+        }
+        : undefined,
       select: {
         id: true,
         user_id: true,
