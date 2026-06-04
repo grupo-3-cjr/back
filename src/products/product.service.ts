@@ -24,22 +24,19 @@ export class ProductService {
   }
 
 
-   async findAll(search?: string) {
-    return this.prisma.products.findMany({
-      where: search
-        ? {
-          name: {
-            contains: search,
-          },
-        }
-        : undefined,
-      include: {
-        store: true,
-        category: true,
-        productImage: true,
-      },
-    });
-  }
+   async findAll(search?: string, store_id?: number) {
+  return this.prisma.products.findMany({
+    where: {
+      ...(search ? { name: { contains: search } } : {}),
+      ...(store_id ? { store_id } : {}),
+    },
+    include: {
+      store: true,
+      category: true,
+      productImage: true,
+    },
+  });
+}
   
 
    async findOne(id: number) {
