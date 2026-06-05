@@ -42,21 +42,27 @@ export class ProductService {
   }
   
 
-   async findOne(id: number) {
-    const Product=await this.prisma.products.findUnique({
-      where: {id},
+  async findOne(id: number) {
+    const produto = await this.prisma.products.findUnique({
+      where: { id },
       include: {
-        store: true,
-        category: true,
-        productImage: true,
-        productRating: true,
-      },
+        category: true, 
+        store: true,    
+        productImage: {
+          orderBy: { order: 'asc' } // Traz as imagens ordenadas
+        },
+        productRating: {
+          include: {
+            user: true // Traz quem avaliou 
+          }
+        }
+      }
     });
 
-    if(!Product){
+    if(!produto){
       throw new NotFoundException(`Produto com ID #${id} não encontrado.`);
     }
-    return Product;
+    return produto;
   }
 
 
