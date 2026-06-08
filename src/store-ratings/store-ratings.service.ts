@@ -28,9 +28,15 @@ export class StoreRatingsService {
         store_id: true,
         rating: true,
         comment: true,
+        user: {
+         select: {
+          name: true,
+          profile_picture_url: true,
+        },
       },
-    });
-  }
+    },
+  });
+}
 
   async findOne(id: number) {
     const storeRating = await this.prisma.storeRatings.findUnique({
