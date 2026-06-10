@@ -11,6 +11,7 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { IsPublic } from 'src/auth/decorators/is-public.decorator';
+import { RecoverPasswordDto } from './dto/recover-password.dto';
 
 @Controller('user')
 export class UserController {
@@ -28,6 +29,11 @@ export class UserController {
   }
 
 @IsPublic()
+@Patch('recover-password')
+recoverPassword(@Body() body: RecoverPasswordDto) {
+  return this.userService.recoverPassword(body.email, body.password);
+}
+
 @Get(':id')
 findOne(@Param('id') id: string) {
   return this.userService.findOne(+id);

@@ -146,4 +146,27 @@ async create(createUserDto: CreateUserDto) {
       throw error;
     }
   }
+
+  async recoverPassword(email: string, newPassword: string) {
+    const user = await this.prisma.users.findUnique({
+      where: { email },
+    });
+
+    if (!user) {
+      throw new NotFoundException("Usuário não existente.")
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    await this.prisma.users.update({
+      where: { email },
+      data : {
+        password_hash: hashedPassword,
+      },
+    });
+
+    return {
+      message: "Senha atualizada com sucesso.",
+    };
+  }
 }
