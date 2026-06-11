@@ -143,6 +143,9 @@ async create(createUserDto: CreateUserDto) {
       if (error.code === 'P2025') {
         throw new NotFoundException(`Usuário com ID #${id} não encontrado.`);
       }
+      if (error.code === 'P2003') {
+        throw new ConflictException('O usuário não pode ser deletado porque possui dependências  de lojas e/ou produtos.');
+      }
       throw error;
     }
   }
