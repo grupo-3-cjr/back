@@ -34,6 +34,7 @@ recoverPassword(@Body() body: RecoverPasswordDto) {
   return this.userService.recoverPassword(body.email, body.password);
 }
 
+@IsPublic()
 @Get(':id')
 findOne(@Param('id') id: string) {
   return this.userService.findOne(+id);
