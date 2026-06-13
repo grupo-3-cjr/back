@@ -47,6 +47,13 @@ export class StoreRatingsService {
         store_id: true,
         rating: true,
         comment: true,
+        createdAt: true,
+        user: {
+          select: {
+            name: true,
+            profile_picture_url: true,
+          }
+        }
       },
     });
 
