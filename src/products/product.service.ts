@@ -9,17 +9,25 @@ import { Product } from './entities/product.entity';
 export class ProductService {
   constructor(private readonly prisma: PrismaService){}
 
-  async create(createProductDto: CreateProductDto) {
+async create(createProductDto: CreateProductDto) {
+    const { images, ...productData } = createProductDto;
+
     const createdProduct = await this.prisma.products.create({
       data: {
-        store_id: createProductDto.store_id,
-        category_id: createProductDto.category_id,
-        name: createProductDto.name,
-        description: createProductDto.description,
-        price: createProductDto.price,
-        stock: createProductDto.stock,  
+        ...productData, 
+        
+        productImage: {
+          create: images?.map((url, index) => ({
+            image_url: url,
+            order: index, 
+          })) || [], 
+        },
       },
+      include: {
+        productImage: true, 
+      }
     });
+
     return createdProduct;
   }
 
@@ -63,21 +71,35 @@ export class ProductService {
   }
 
 
-  async update(id: number, updateProductDto: UpdateProductDto) {
-    try{
+async update(id: number, updateProductDto: UpdateProductDto) {
+    try {
+      // 1. Separa as imagens do resto dos dados
+      const { images, ...productData } = updateProductDto;
+
       return await this.prisma.products.update({
-        where: {id},
-        data: {... updateProductDto},
-  });
-    }catch(error: any){
-      if(error.code==='P2025'){
+        where: { id },
+        data: {
+          ...productData,
+          
+          // 2. Se o array de imagens veio na requisição, atualizamos a relação
+          ...(images !== undefined && {
+            productImage: {
+              deleteMany: {}, // Apaga todas as referências antigas no banco
+              create: images.map((url, index) => ({
+                image_url: url,
+                order: index, // Reconstrói a ordem com as fotos que sobraram/chegaram
+              })),
+            },
+          }),
+        },
+      });
+    } catch (error: any) {
+      if (error.code === 'P2025') {
         throw new NotFoundException(`Produto com ID#${id} não encontrado.`);
       }
       throw error;
-
     }
   }
-
  async remove(id: number, ) {
   try{
     return await this.prisma.products.delete({
