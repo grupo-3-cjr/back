@@ -11,7 +11,9 @@ import {
 import { CommentsService } from './comments.service';
 import { CreateCommentsDto } from './dto/create-comments.dto';
 import { UpdateCommentsDto } from './dto/update-comments.dto';
+import { IsPublic } from 'src/auth/decorators/is-public.decorator';
 
+@IsPublic()
 @Controller('comments')
 export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
