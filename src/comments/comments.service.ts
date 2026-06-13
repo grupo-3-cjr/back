@@ -43,24 +43,26 @@ export class CommentsService {
         }
 
     }
-  async findAll() {
-    try {
-      return await this.prisma.ratingComments.findMany({
+  async findAll(store_rating_id?: number) {
+  return this.prisma.ratingComments.findMany({
+    where: store_rating_id ? { store_rating_id } : undefined,
+    select: {
+      id: true,
+      user_id: true,
+      store_rating_id: true,
+      product_rating_id: true,
+      content: true,
+      createdAt: true,
+      updatedAt: true,
+      user: {
         select: {
-          id: true,
-          user_id: true,
-          store_rating_id: true,
-          product_rating_id: true,
-          content: true,
-          createdAt: true,
-          updatedAt: true,
+          name: true,
+          profile_picture_url: true,
         },
-      });
-    } catch (error: any) {
-      this.logger.error(`Falha ao buscar comentários: ${error.message}`, error.stack);
-      throw new InternalServerErrorException('Erro ao buscar a lista de comentários.');
-    }
-  }
+      },
+    },
+  });
+}
 
   async findOne(id: number) {
     const comments = await this.prisma.ratingComments.findUnique({
