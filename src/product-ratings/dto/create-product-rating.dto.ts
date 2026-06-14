@@ -14,5 +14,4 @@ export class CreateProductRatingDto {
 
     @IsString()
     comment!: string;
-  store_id: any;
 }
