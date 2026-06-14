@@ -17,6 +17,8 @@ import { ProductModule } from './products/product.module';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { UploadService } from './upload/upload.service';
+import { UploadController } from './upload/upload.controller';
 
 @Module({
   imports: [
@@ -34,13 +36,14 @@ import { AppService } from './app.service';
     ProductRatingsModule,
     ProductModule
   ],
-  controllers: [AppController],
+  controllers: [AppController, UploadController],
   providers: [
     AppService,
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
     },
+    UploadService,
   ],
 })
 export class AppModule {}
