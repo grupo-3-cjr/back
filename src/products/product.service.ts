@@ -73,21 +73,19 @@ async create(createProductDto: CreateProductDto) {
 
 async update(id: number, updateProductDto: UpdateProductDto) {
     try {
-      // 1. Separa as imagens do resto dos dados
       const { images, ...productData } = updateProductDto;
 
       return await this.prisma.products.update({
         where: { id },
         data: {
           ...productData,
-          
-          // 2. Se o array de imagens veio na requisição, atualizamos a relação
+        
           ...(images !== undefined && {
             productImage: {
-              deleteMany: {}, // Apaga todas as referências antigas no banco
+              deleteMany: {}, 
               create: images.map((url, index) => ({
                 image_url: url,
-                order: index, // Reconstrói a ordem com as fotos que sobraram/chegaram
+                order: index, 
               })),
             },
           }),
