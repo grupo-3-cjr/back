@@ -3,9 +3,9 @@ import {
     IsString,
     IsNumber,
     Min, 
+    IsOptional, 
+    IsArray,
 }   from "class-validator";
-import { IsPublic } from "src/auth/decorators/is-public.decorator";
-
 
 export class CreateProductDto {
 
@@ -30,6 +30,9 @@ export class CreateProductDto {
     @Min(0)
     stock!: number;
 
+    @IsOptional()
+    @IsArray()
+    @IsString({ each: true })
+    images?: string[];
 
 }
-
