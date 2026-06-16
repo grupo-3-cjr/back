@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import { PutObjectCommand, S3Client, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { randomUUID } from 'crypto';
 import { extname } from 'path';
 
@@ -38,6 +38,24 @@ export class UploadService {
     } catch (error) {
       console.error('Erro ao enviar para o Cloudflare R2:', error);
       throw new Error('Falha no upload do arquivo');
+    }
+  }
+  async deleteFile(fileUrl: string) {
+    try {
+      
+      const key = fileUrl.split('/').pop(); 
+
+      if (!key) return;
+
+      const command = new DeleteObjectCommand({
+        Bucket: process.env.R2_BUCKET_NAME as string,
+        Key: key, 
+      });
+
+      await this.s3Client.send(command);
+      console.log(`Arquivo ${key} removido do R2 com sucesso.`);
+    } catch (error) {
+      console.error(`Falha ao remover arquivo do R2:`, error);
     }
   }
 }

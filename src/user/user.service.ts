@@ -8,12 +8,16 @@ import {
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { UploadService } from '../upload/upload.service';
 import * as bcrypt from 'bcrypt';
 import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+      private prisma: PrismaService,
+      private uploadService: UploadService
+    ) {}
   private readonly logger = new Logger(UserService.name);
 
 async create(createUserDto: CreateUserDto) {
@@ -102,6 +106,21 @@ async create(createUserDto: CreateUserDto) {
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
+    const userAntigo = await this.prisma.users.findUnique({ where: { id } });
+    if (!userAntigo) {
+      throw new NotFoundException(`Usuário com ID #${id} não encontrado.`);
+    }
+    if (
+      updateUserDto.profile_picture_url && 
+      userAntigo.profile_picture_url && 
+      updateUserDto.profile_picture_url !== userAntigo.profile_picture_url
+    ) {
+     
+      if (userAntigo.profile_picture_url.startsWith('http')) {
+        await this.uploadService.deleteFile(userAntigo.profile_picture_url);
+      }
+    }
+
     const dataToUpdate: any = { ...updateUserDto };
 
     if (updateUserDto.password) {
@@ -133,21 +152,30 @@ async create(createUserDto: CreateUserDto) {
 
   async remove(id: number) {
     try {
-      const deletedUser = await this.prisma.users.delete({
-        where: { id },
-      });
 
-      const { password_hash, ...userWithoutPassword } = deletedUser;
-      return userWithoutPassword;
-    } catch (error: any) {
-      if (error.code === 'P2025') {
-        throw new NotFoundException(`Usuário com ID #${id} não encontrado.`);
+        const user = await this.prisma.users.findUnique({ where: { id } });
+        if (!user) {
+          throw new NotFoundException(`Usuário com ID #${id} não encontrado.`);
+        }
+
+        if (user.profile_picture_url && user.profile_picture_url.startsWith('http')) {
+          await this.uploadService.deleteFile(user.profile_picture_url);
+        }
+        const deletedUser = await this.prisma.users.delete({
+          where: { id },
+        });
+
+        const { password_hash, ...userWithoutPassword } = deletedUser;
+        return userWithoutPassword;
+      } catch (error: any) {
+        if (error.code === 'P2025') {
+          throw new NotFoundException(`Usuário com ID #${id} não encontrado.`);
+        }
+        if (error.code === 'P2003') {
+          throw new ConflictException('O usuário não pode ser deletado porque possui dependências de lojas e/ou produtos.');
+        }
+        throw error;
       }
-      if (error.code === 'P2003') {
-        throw new ConflictException('O usuário não pode ser deletado porque possui dependências  de lojas e/ou produtos.');
-      }
-      throw error;
-    }
   }
 
   async recoverPassword(email: string, newPassword: string) {
