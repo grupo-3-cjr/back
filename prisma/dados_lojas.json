@@ -1,0 +1,71 @@
+[
+  {
+    "nome_loja": "d'carts & baskets",
+    "categoria_pai": "Mercado",
+    "subcategorias": [
+      {
+        "nome": "Utilidades Domésticas",
+        "produtos": [
+          { "nome": "Cesto Organizador Tramado", "descricao": "Cesto multiuso com alças.", "preco": 45.90, "quantidade": 60 },
+          { "nome": "Kit 4 Potes Herméticos", "descricao": "Potes de acrílico com vedação em silicone.", "preco": 89.90, "quantidade": 40 },
+          { "nome": "Carrinho de Feira Dobrável", "descricao": "Resistente e compacto para compras.", "preco": 129.00, "quantidade": 20 },
+          { "nome": "Cesto de Roupa Suja Bambu", "descricao": "Elegante e com saco interno removível.", "preco": 149.90, "quantidade": 15 }
+        ]
+      },
+      {
+        "nome": "Descartáveis",
+        "produtos": [
+          { "nome": "Guardanapo Folha Dupla (50 un)", "descricao": "Super absorvente e macio.", "preco": 6.50, "quantidade": 200 },
+          { "nome": "Sacos de Lixo 50L (30 un)", "descricao": "Reforçado e à prova de vazamentos.", "preco": 18.90, "quantidade": 150 },
+          { "nome": "Papel Alumínio Rolo 30m", "descricao": "Ideal para assados e conservação.", "preco": 12.00, "quantidade": 100 }
+        ]
+      }
+    ]
+  },
+  {
+    "nome_loja": "Dog Goods",
+    "categoria_pai": "Mercado",
+    "subcategorias": [
+      {
+        "nome": "Alimentação Canina",
+        "produtos": [
+          { "nome": "Ração Cães Adultos Raças Médias 15kg", "descricao": "Nutrição balanceada para cães ativos.", "preco": 189.90, "quantidade": 30 },
+          { "nome": "Bifinho Sabor Carne 65g", "descricao": "Petisco macio ideal para adestramento.", "preco": 5.90, "quantidade": 200 },
+          { "nome": "Osso Defumado Natural", "descricao": "Distrai e limpa os dentes do seu cão.", "preco": 18.50, "quantidade": 80 },
+          { "nome": "Lata Patê Cordeiro com Arroz 300g", "descricao": "Refeição úmida de alta palatabilidade.", "preco": 14.90, "quantidade": 120 }
+        ]
+      },
+      {
+        "nome": "Higiene Pet",
+        "produtos": [
+          { "nome": "Shampoo Pelos Claros 500ml", "descricao": "Realça a cor natural e hidrata.", "preco": 28.90, "quantidade": 60 },
+          { "nome": "Tapete Higiênico 80x60cm (30 un)", "descricao": "Fitas adesivas e barreira antivazamento.", "preco": 65.00, "quantidade": 100 },
+          { "nome": "Saquinhos Cata Caca (3 rolos)", "descricao": "Biodegradável e resistente.", "preco": 12.00, "quantidade": 150 }
+        ]
+      }
+    ]
+  },
+  {
+    "nome_loja": "Magic Chicken",
+    "categoria_pai": "Jogos",
+    "subcategorias": [
+      {
+        "nome": "Video Games e Consoles",
+        "produtos": [
+          { "nome": "Console PlayStation 5", "descricao": "SSD ultrarrápido e controle DualSense.", "preco": 4499.00, "quantidade": 10 },
+          { "nome": "Console Nintendo Switch OLED", "descricao": "Tela com cores vivas para jogar onde quiser.", "preco": 2399.00, "quantidade": 15 },
+          { "nome": "Controle Xbox Series X/S Sem Fio", "descricao": "Ergonomia aprimorada e aderência texturizada.", "preco": 459.00, "quantidade": 30 },
+          { "nome": "Cartão Presente PSN R$100", "descricao": "Adicione fundos à sua carteira digital.", "preco": 100.00, "quantidade": 200 }
+        ]
+      },
+      {
+        "nome": "Jogos Físicos",
+        "produtos": [
+          { "nome": "Jogo God of War Ragnarök (PS5)", "descricao": "A épica jornada de Kratos e Atreus.", "preco": 299.90, "quantidade": 25 },
+          { "nome": "Jogo Super Mario Bros. Wonder (Switch)", "descricao": "Aventura clássica de plataforma 2D inovadora.", "preco": 349.00, "quantidade": 20 },
+          { "nome": "Jogo EA Sports FC 24 (PS4)", "descricao": "O jogo do mundo com hiper-realismo.", "preco": 249.00, "quantidade": 40 }
+        ]
+      }
+    ]
+  }
+]
