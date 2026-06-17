@@ -43,6 +43,7 @@ async create(createProductDto: CreateProductDto) {
       store: true,
       category: true,
       productImage: true,
+      productRating: true,
     },
   });
 }
