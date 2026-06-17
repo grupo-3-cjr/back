@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { StoreRatingsService } from './store-ratings.service';
 import { CreateStoreRatingDto } from './dto/create-store-rating.dto';
 import { UpdateStoreRatingDto } from './dto/update-store-rating.dto';
@@ -15,8 +15,8 @@ export class StoreRatingsController {
   }
 
   @Get()
-  findAll() {
-    return this.storeRatingsService.findAll();
+  findAll(@Query('user_id') user_id?: string,) {
+    return this.storeRatingsService.findAll(user_id ? +user_id : undefined);
   }
 
   @Get(':id')
