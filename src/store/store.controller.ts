@@ -16,8 +16,8 @@ export class StoreController {
   }
 
   @Get()
-  findAll(@Query('search') search?: string) {
-    return this.storeService.findAll(search);
+  findAll(@Query('search') search?: string, @Query('categoria_id') categoria_id?: string, @Query('user_id') user_id?: string) {
+    return this.storeService.findAll(search, categoria_id ? +categoria_id : undefined, user_id ? +user_id : undefined);
   }
 
   @Get(':id')

@@ -20,8 +20,11 @@ export class StoreRatingsService {
     return createdStoreRating;
   }
 
-  async findAll() {
+  async findAll(user_id?: number) {
     return this.prisma.storeRatings.findMany({
+      where: {
+        ...(user_id ? { user_id: user_id } : {})
+      },
       select: {
         id: true,
         user_id: true,

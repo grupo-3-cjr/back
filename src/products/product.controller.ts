@@ -16,8 +16,8 @@ export class ProductController {
   }
 
   @Get()
-  findAll(@Query('search') search?: string, @Query('store_id') store_id?: string, @Query('categoria_id') categoria_id?: string) {
-     return this.productService.findAll(search, store_id ? +store_id : undefined, categoria_id ? +categoria_id : undefined);
+  findAll(@Query('search') search?: string, @Query('store_id') store_id?: string, @Query('categoria_id') categoria_id?: string, @Query('user_id') user_id?: string,) {
+     return this.productService.findAll(search, store_id ? +store_id : undefined, categoria_id ? +categoria_id : undefined, user_id ? +user_id : undefined);
 }
 
   @Get(':id')
