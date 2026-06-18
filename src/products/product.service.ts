@@ -33,20 +33,30 @@ async create(createProductDto: CreateProductDto) {
 
 
    async findAll(search?: string, store_id?: number, categoria_id?: number, user_id?: number) {
-  return this.prisma.products.findMany({
-    where: {
-      ...(search ? { name: { contains: search } } : {}),
-      ...(store_id ? { store_id } : {}),
-      ...(categoria_id ? { category_id: categoria_id } : {}),
-      ...(user_id ? { user_id: user_id } : {}),
-    },
-    include: {
-      store: true,
-      category: true,
-      productImage: true,
-    },
-  });
-}
+    let storeIds: number[] | undefined;
+
+    if (user_id) {
+      const userStores = await this.prisma.stores.findMany({
+        where: { user_id },
+        select: { id: true },
+      });
+      storeIds = userStores.map(s => s.id);
+    }
+
+    return this.prisma.products.findMany({
+      where: {
+        ...(search ? { name: { contains: search } } : {}),
+        ...(store_id ? { store_id } : {}),
+        ...(categoria_id ? { category_id: categoria_id } : {}),
+        ...(storeIds ? { store_id: { in: storeIds } } : {}),
+      },
+      include: {
+        store: true,
+        category: true,
+        productImage: true,
+      },
+    });
+  }
   
 
   async findOne(id: number) {
