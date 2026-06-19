@@ -3,11 +3,11 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Product } from './entities/product.entity';
-
+import { UploadService } from '../upload/upload.service';
 
 @Injectable()
 export class ProductService {
-  constructor(private readonly prisma: PrismaService){}
+  constructor(private readonly prisma: PrismaService, private readonly uploadService: UploadService,){}
 
 async create(createProductDto: CreateProductDto) {
     const { images, ...productData } = createProductDto;
@@ -111,15 +111,45 @@ async update(id: number, updateProductDto: UpdateProductDto) {
     }
   }
  async remove(id: number, ) {
-  try{
-    return await this.prisma.products.delete({
-      where: {id},
-    });
-  }catch(error: any){
-    if(error.code==='P2025'){
-      throw new NotFoundException(`Produto com ID#${id} não encontrado.`);
+      try {
+
+      const produto = await this.prisma.products.findUnique({
+        where: { id },
+        include: { productImage: true },
+      });
+
+      if (!produto) {
+        throw new NotFoundException('Produto não encontrado');
       }
-      throw error;
-    } 
-  }
+
+      if (produto.productImage && produto.productImage.length > 0) {
+        for (const img of produto.productImage) {
+          if (img.image_url) {
+            await this.uploadService.deleteFile(img.image_url); 
+          }
+        }
+      }
+
+      await this.prisma.productImages.deleteMany({
+        where: { product_id: id },
+      });
+
+      await this.prisma.productRatings.deleteMany({
+        where: { product_id: id },
+      });
+
+      const deletedProduct = await this.prisma.products.delete({
+        where: { id },
+      });
+
+      return deletedProduct;
+
+    } catch (error: any) {
+      console.error(error);
+      if (error.code === 'P2025') {
+        throw new NotFoundException(`Produto com ID #${id} não encontrado.`);
+      }
+      throw new NotFoundException('Erro ao deletar o produto.');
+    }
+}
 }
